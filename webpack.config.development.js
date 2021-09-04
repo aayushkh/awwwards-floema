@@ -23,6 +23,6 @@ module.export = merge(config, {
   // and where it should output your bundles, assets and anything else you
   // bundle or load with webpack.
   output: {
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, './public')
   }
 });
