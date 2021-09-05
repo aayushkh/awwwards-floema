@@ -1,15 +1,13 @@
 {
-  "name": "floema",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack --progress --config webpack.config.build.js",
-    "development": "webpack server --progress --config webpack.config.development.js",
-    "start": "npm run development"
-  },
+  "version": "0.0.1",
+  "repository": "https://github.com/aayushkh/webpack-boilerplate.git",
   "author": "Aayush Khanna",
   "license": "UNLICENSED",
+  "scripts": {
+    "build": "webpack --progress --config webpack.config.build.js",
+    "development": "webpack serve --progress --config webpack.config.development.js",
+    "start": "npm run development"
+  },
   "devDependencies": {
     "@babel/core": "^7.15.4",
     "babel-loader": "^8.2.2",
