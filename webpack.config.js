@@ -29,7 +29,7 @@ module.exports = {
       dirShared,
       dirStyles,
       dirNode,
-    ]
+    ],
   },
 
   // The plugins option is used to customize the webpack build process in a
@@ -72,7 +72,7 @@ module.exports = {
           ['jpegtran', { progressive: true }],
 
           // optimizationLevel (0-7): The optimization level 0 enables a set of
-          // optimization operations that require minimal effort
+          // optimization operations that require minimal effort.
           ['optipng', { optimizationLevel: 8 }],
         ],
       },
@@ -95,7 +95,7 @@ module.exports = {
         // Each entry specifies a loader to be used.
         use: {
           loader: 'babel-loader',
-        }
+        },
       },
 
       {
@@ -104,8 +104,8 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '',
-            }
+              publicPath: '', // root
+            },
           },
           {
             loader: 'css-loader',
@@ -115,7 +115,7 @@ module.exports = {
           },
           {
             loader: 'sass-loader',
-          }
+          },
         ],
       },
 
@@ -125,7 +125,7 @@ module.exports = {
         generator: {
           // This option determines the name of each output bundle.
           filename: '[hash].[ext]',
-        }
+        },
       },
 
       {
