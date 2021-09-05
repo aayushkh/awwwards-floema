@@ -10,7 +10,6 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev';
 const dirApp = path.join(__dirname, 'src');
 const dirShared = path.join(__dirname, 'shared');
 const dirStyles = path.join(__dirname, 'styles');
-
 const dirNode = 'node_modules';
 
 module.exports = {
@@ -111,7 +110,7 @@ module.exports = {
 
       {
         test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-        loader: 'file-loader',
+        loader: 'asset/resource',
         options: {
           name (file) {
             return '[hash].[ext]'
@@ -120,7 +119,7 @@ module.exports = {
       },
 
       {
-        test: /\.(jpe?g|png|gif|svg|webp)$/i,
+        test: /\.(jpe?g|png|gif|svg|webp)$/,
         use: [
           {
             loader: ImageMinimizerPlugin.loader,
@@ -130,7 +129,7 @@ module.exports = {
 
       {
         test: /\.(glsl|frag|vert)$/,
-        type: 'asset/source', // replaced raw-loader
+        type: 'asset/source',
         exclude: /node_modules/,
       },
 
