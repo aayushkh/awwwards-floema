@@ -18,7 +18,7 @@ module.exports = {
   // The entry object is where webpack looks to start building the bundle.
   entry: [
     path.join(dirApp, 'index.js'),
-    path.join(dirStyles, 'index.scss')
+    path.join(dirStyles, 'index.scss'),
   ],
 
   // These options change how modules are resolved.
@@ -28,7 +28,7 @@ module.exports = {
       dirApp,
       dirShared,
       dirStyles,
-      dirNode
+      dirNode,
     ]
   },
 
@@ -38,7 +38,7 @@ module.exports = {
     // The DefinePlugin replaces variables in your code with other values or
     // expressions at compile time.
     new webpack.DefinePlugin({
-      IS_DEVELOPMENT
+      IS_DEVELOPMENT,
     }),
 
     // Automatically load modules instead of having to import or require them
@@ -50,7 +50,7 @@ module.exports = {
         {
           from: './shared',
           to: '', // root
-          noErrorOnMissing: true
+          noErrorOnMissing: true,
         },
       ],
     }),
@@ -59,7 +59,7 @@ module.exports = {
       // This option determines the name of each output CSS file
       filename: '[name].css',
       // This option determines the name of non-entry chunk files
-      chunkFilename: '[id].css'
+      chunkFilename: '[id].css',
     }),
 
     new ImageMinimizerPlugin({
@@ -94,7 +94,7 @@ module.exports = {
         // Rule.use can be an array of UseEntry which are applied to modules.
         // Each entry specifies a loader to be used.
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
         }
       },
 
@@ -104,17 +104,17 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: ''
+              publicPath: '',
             }
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader',
           },
           {
-            loader: 'postcss-loader'
+            loader: 'postcss-loader',
           },
           {
-            loader: 'sass-loader'
+            loader: 'sass-loader',
           }
         ],
       },
@@ -148,7 +148,7 @@ module.exports = {
         loader: 'glslify-loader',
         exclude: /node_modules/,
       },
-    ]
+    ],
   },
 
   optimization: {
