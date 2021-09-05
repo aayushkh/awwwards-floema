@@ -1,13 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev';
 
-const dirApp = path.join(__dirname, 'src');
+const dirApp = path.join(__dirname, 'app');
 const dirShared = path.join(__dirname, 'shared');
 const dirStyles = path.join(__dirname, 'styles');
 const dirNode = 'node_modules';
@@ -16,7 +18,7 @@ module.exports = {
   // The entry object is where webpack looks to start building the bundle.
   entry: [
     path.join(dirApp, 'index.js'),
-    path.join(dirStyles, 'index.scss'),
+    path.join(dirStyles, 'index.scss')
   ],
 
   // These options change how modules are resolved.
@@ -30,6 +32,8 @@ module.exports = {
     ]
   },
 
+  // The plugins option is used to customize the webpack build process in a
+  // variety of ways.
   plugins: [
     // The DefinePlugin replaces variables in your code with other values or
     // expressions at compile time.
@@ -37,14 +41,18 @@ module.exports = {
       IS_DEVELOPMENT
     }),
 
+    // Automatically load modules instead of having to import or require them
+    // everywhere.
+    new webpack.ProvidePlugin({}), // unused
+
     new CopyWebpackPlugin({
       patterns: [
         {
           from: './shared',
-          to: '',  // root
+          to: '', // root
           noErrorOnMissing: true
-        }
-      ]
+        },
+      ],
     }),
 
     new MiniCssExtractPlugin({
@@ -56,26 +64,29 @@ module.exports = {
 
     new ImageMinimizerPlugin({
       minimizerOptions: {
-        // Lossless optimization with custom option
-        // Feel free to experiment with options for better result for you
         plugins: [
           // interlaced: Interlace gif for progressive rendering.
-          ["gifsicle", { interlaced: true }],
+          ['gifsicle', { interlaced: true }],
 
           // progressive: Lossless conversion to progressive.
-          ["jpegtran", { progressive: true }],
+          ['jpegtran', { progressive: true }],
 
           // optimizationLevel (0-7): The optimization level 0 enables a set of
           // optimization operations that require minimal effort
-          ["optipng", { optimizationLevel: 5 }],
+          ['optipng', { optimizationLevel: 8 }],
         ],
       },
     }),
+
+    new CleanWebpackPlugin(),
   ],
 
   // These options determine how the different types of modules within a project
   // will be treated.
   module: {
+    // An array of Rules which are matched to requests when modules are created.
+    // These rules can modify how the module is created. They can apply loaders
+    // to the module, or modify the parser.
     rules: [
       {
         // Include all modules that pass test assertion
@@ -105,21 +116,20 @@ module.exports = {
           {
             loader: 'sass-loader'
           }
-        ]
+        ],
       },
 
       {
         test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-        loader: 'asset/resource',
-        options: {
-          name (file) {
-            return '[hash].[ext]'
-          }
+        type: 'asset/resource', // replaced file-loader
+        generator: {
+          // This option determines the name of each output bundle.
+          filename: '[hash].[ext]',
         }
       },
 
       {
-        test: /\.(jpe?g|png|gif|svg|webp)$/,
+        test: /\.(jpe?g|png|gif|svg|webp)$/i,
         use: [
           {
             loader: ImageMinimizerPlugin.loader,
@@ -129,7 +139,7 @@ module.exports = {
 
       {
         test: /\.(glsl|frag|vert)$/,
-        type: 'asset/source',
+        type: 'asset/source', // replaced raw-loader
         exclude: /node_modules/,
       },
 
@@ -138,7 +148,11 @@ module.exports = {
         loader: 'glslify-loader',
         exclude: /node_modules/,
       },
-
     ]
-  }
-}
+  },
+
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
+  },
+};
