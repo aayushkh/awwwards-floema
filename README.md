@@ -1,9 +1,9 @@
-A creative website built by following [Bizarro's](https://twitter.com/lhbizarro) course on [Awwwards Academy](https://www.awwwards.com/academy/course/building-an-immersive-creative-website-from-scratch-without-frameworks).
+A boilerplate for webpoack builds, made with help from [Bizarro's](https://twitter.com/lhbizarro) course on [Awwwards Academy](https://www.awwwards.com/academy/course/building-an-immersive-creative-website-from-scratch-without-frameworks).
 
 [Design (Adobe XD)](https://xd.adobe.com/view/16704f7c-b42f-4409-9941-4b145571d9aa-4323/)
 
 ## Installation
-Run `npm start` to start webpack development.
+Run `yarn install` to install packages, and then `yarn start` to start webpack development.
 
 ## References
 - [Webpack Configuration](https://webpack.js.org/configuration/)
