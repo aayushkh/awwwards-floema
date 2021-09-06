@@ -16,7 +16,7 @@ module.exports = merge(config, {
   devServer: {
     // Tells devServer to write generated assets to the disk.
     // The output is written to the output.path directory.
-    writeToDisk: true,
+    allowedHosts: 'auto',
   },
 
   // The top-level output key contains set of options instructing webpack on how
