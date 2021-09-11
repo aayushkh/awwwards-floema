@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge');
 
 const config = require('./webpack.config');
 
+
 module.exports = merge(config, {
   // Providing the mode configuration option tells webpack to use its built-in
   // optimizations accordingly.

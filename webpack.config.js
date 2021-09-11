@@ -14,6 +14,7 @@ const dirShared = path.join(__dirname, 'shared');
 const dirStyles = path.join(__dirname, 'styles');
 const dirNode = 'node_modules';
 
+
 module.exports = {
   // The entry object is where webpack looks to start building the bundle.
   entry: [
@@ -73,7 +74,7 @@ module.exports = {
 
           // optimizationLevel (0-7): The optimization level 0 enables a set of
           // optimization operations that require minimal effort.
-          ['optipng', { optimizationLevel: 8 }],
+          ['optipng', { optimizationLevel: 5 }],
         ],
       },
     }),
@@ -128,14 +129,21 @@ module.exports = {
         },
       },
 
-      {
-        test: /\.(jpe?g|png|gif|svg|webp)$/i,
-        use: [
-          {
-            loader: ImageMinimizerPlugin.loader,
-          },
-        ],
-      },
+      // Using the ImageMinimizerPlugin above
+      // {
+      //   test: /\.(jpe?g|png|gif|svg|webp)$/i,
+      //   use: [
+      //     {
+      //       loader: ImageMinimizerPlugin.loader,
+      //       options: {
+      //         severityError: "warning", // Ignore errors on corrupted images
+      //         minimizerOptions: {
+      //           plugins: ['gifsicle', 'jpegtran', 'optipng'],
+      //         },
+      //       },
+      //     },
+      //   ],
+      // },
 
       {
         test: /\.(glsl|frag|vert)$/,
@@ -155,4 +163,6 @@ module.exports = {
     minimize: true,
     minimizer: [new TerserPlugin()],
   },
+
+  stats: 'normal',
 };
