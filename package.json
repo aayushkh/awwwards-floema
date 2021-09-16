@@ -4,8 +4,10 @@
   "author": "Aayush Khanna",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "webpack --progress --config webpack.config.build.js",
-    "development": "webpack serve --progress --config webpack.config.development.js",
+    "backend:build": "node app.js",
+    "backend:development": "nodemon app.js",
+    "frontend:build": "webpack --progress --config webpack.config.build.js",
+    "frontend:development": "webpack serve --progress --config webpack.config.development.js",
     "start": "yarn run development"
   },
   "devDependencies": {
@@ -37,5 +39,9 @@
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.1.0",
     "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
   }
 }
