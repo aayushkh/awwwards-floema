@@ -6,3 +6,4 @@ public/
 
 # global rules
 .DS_Store
+yarn-error.log
