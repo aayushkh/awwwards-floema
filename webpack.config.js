@@ -63,22 +63,6 @@ module.exports = {
       chunkFilename: '[id].css',
     }),
 
-    new ImageMinimizerPlugin({
-      minimizerOptions: {
-        plugins: [
-          // interlaced: Interlace gif for progressive rendering.
-          ['gifsicle', { interlaced: true }],
-
-          // progressive: Lossless conversion to progressive.
-          ['jpegtran', { progressive: true }],
-
-          // optimizationLevel (0-7): The optimization level 0 enables a set of
-          // optimization operations that require minimal effort.
-          ['optipng', { optimizationLevel: 5 }],
-        ],
-      },
-    }),
-
     new CleanWebpackPlugin(),
   ],
 
@@ -129,22 +113,6 @@ module.exports = {
         },
       },
 
-      // Using the ImageMinimizerPlugin above
-      // {
-      //   test: /\.(jpe?g|png|gif|svg|webp)$/i,
-      //   use: [
-      //     {
-      //       loader: ImageMinimizerPlugin.loader,
-      //       options: {
-      //         severityError: "warning", // Ignore errors on corrupted images
-      //         minimizerOptions: {
-      //           plugins: ['gifsicle', 'jpegtran', 'optipng'],
-      //         },
-      //       },
-      //     },
-      //   ],
-      // },
-
       {
         test: /\.(glsl|frag|vert)$/,
         type: 'asset/source', // replaced raw-loader
@@ -162,6 +130,29 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin()],
+    minimizer: [
+      "...",
+      new TerserPlugin(),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminMinify,
+          options: {
+            // Lossless optimization with custom option
+            // Feel free to experiment with options for better result for you
+            plugins: [
+              // optimization operations that require minimal effort
+
+              // interlaced: Interlace gif for progressive rendering
+              ["gifsicle", { interlaced: true }],
+              // progressive: Lossless conversion to progressive
+              ["jpegtran", { progressive: true }],
+              // optimizationLevel (0-7): The optimization level 0 enables a set of
+              ["optipng", { optimizationLevel: 5 }],
+            ],
+          },
+        },
+      }),
+    ],
   },
 
   stats: 'normal',
