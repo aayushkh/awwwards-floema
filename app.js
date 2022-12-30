@@ -1,10 +1,13 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const port = 3000
+import * as dotenv from 'dotenv';
+const express = require('express');
+const app = express();
+const path = require('path');
+const port = 3000;
 
+dotenv.config();
+ 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');   // Sets the Template Engine
+app.set('view engine', 'pug');
 
 app.get('/', async (req, res) => {
   res.render('pages/home');
