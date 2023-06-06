@@ -27,23 +27,25 @@ const routes = [
 ];
 
 // Initialize the prismic.io api
-const initAPI = Prismic.createClient(prismicEndpoint, {
-  fetch,
-  accessToken,
-  routes,
-});
+const initAPI = (req) => {
+  return Prismic.createClient(prismicEndpoint, {
+    fetch,
+    accessToken,
+    routes,
+  });
+};
 
 // Prismic Link Resolver
 // https://prismic.io/docs/route-resolver#link-resolver
 const handleLinkResolver = doc => {
   // Default to homepage
   return '/';
-}
+};
 
 // Add a middleware function that runs on every route. It will inject
 // the prismic context to the locals so that we can access these in
 // our templates
-app.use((_, res, next) => {
+app.use((req, res, next) => {
   const ua = UAParser(req.headers['user-agent']);
 
   res.locals.isDesktop = ua.device.type === undefined;
@@ -112,8 +114,8 @@ const handleRequest = async (api) => {
     navigation,
     preloader,
     products,
-  }
-}
+  };
+};
 
 
 // Set pug as templating engine
@@ -130,9 +132,7 @@ app.get('/', async (req, res) => {
   const api = await initApi(req);
   const defaults = await handleRequest(api);
 
-  res.render('base', {
-    ...defaults
-  });
+  res.render('base', { ...defaults });
 });
 
 // Query for the root path
