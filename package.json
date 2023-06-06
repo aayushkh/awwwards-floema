@@ -3,7 +3,6 @@
   "repository": "https://github.com/aayushkh/webpack-boilerplate.git",
   "author": "Aayush Khanna",
   "license": "UNLICENSED",
-  "type": "module",
   "scripts": {
     "backend:build": "node app.js",
     "backend:development": "nodemon app.js",

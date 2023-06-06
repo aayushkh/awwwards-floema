@@ -1,16 +1,16 @@
-import 'dotenv/config.js'
+// import 'dotenv/config.js';
+require('dotenv').config();
 
-import fetch from 'node-fetch'
-import path from 'path'
-import express from 'express'
-import { fileURLToPath } from 'url'
+const fetch = require('node-fetch');
+const path = require('path');
+const express = require('express');
 
-const app = express()
-const port = process.env.PORT || 8005
+const app = express();
+const port = process.env.PORT || 8005;
 
-import * as Prismic from '@prismicio/client'
-import * as PrismicHelpers from '@prismicio/helpers'
-import * as UAParser from 'ua-parser-js'
+const Prismic = require('@prismicio/client');
+const PrismicHelpers = require('@prismicio/helpers');
+const UAParser = require('ua-parser-js');
 
 const prismicEndpoint = process.env.PRISMIC_ENDPOINT
 const accessToken = process.env.PRISMIC_ACCESS_TOKEN
@@ -27,7 +27,7 @@ const routes = [
 ]
 
 // Initialize the prismic.io api
-export const initAPI = Prismic.createClient(prismicEndpoint, {
+const initAPI = Prismic.createClient(prismicEndpoint, {
   fetch,
   accessToken,
   routes,
@@ -69,25 +69,25 @@ const handleRequest = async (api) => {
     api.query(Prismic.Predicates.at('document.type', 'collection'), {
       fetchLinks: 'product.image, product.model'
     }),
-  ])
+  ]);
 
-  const products = []
+  const products = [];
 
   collections.forEach(collection => {
     collection.data.products.forEach(({ products_product: { uid } }) => {
       products.push(find(productsData, { uid }))
     })
-  })
+  });
 
-  const assets = []
+  const assets = [];
 
   home.data.gallery.forEach((item) => {
     assets.push(item.image.url)
-  })
+  });
 
   about.data.gallery.forEach((item) => {
     assets.push(item.image.url)
-  })
+  });
 
   about.data.body.forEach((section) => {
     if (section.slice_type === 'gallery') {
@@ -95,13 +95,13 @@ const handleRequest = async (api) => {
         assets.push(item.image.url)
       })
     }
-  })
+  });
 
   collections.forEach((collection) => {
     collection.data.products.forEach((item) => {
       assets.push(item.products_product.data.image.url)
     })
-  })
+  });
 
   return {
     assets,
@@ -112,29 +112,28 @@ const handleRequest = async (api) => {
     navigation,
     preloader,
     products,
-  }
-}
+  };
+};
 
 
 // Set pug as templating engine
-app.set('view engine', 'pug')
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-app.use(express.static(path.join(__dirname, 'views')))
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', async (req, res) => {
   const document = await client.getSingle('home')
   res.render('page', { document })
-})
+});
 
 
 app.get('/', async (req, res) => {
-  const api = await initApi(req)
-  const defaults = await handleRequest(api)
+  const api = await initApi(req);
+  const defaults = await handleRequest(api);
 
   res.render('base', {
     ...defaults
-  })
-})
+  });
+});
 
 // Query for the root path
 // app.get('/', async (req, res) => {
@@ -143,18 +142,18 @@ app.get('/', async (req, res) => {
 // })
 
 app.get('/about', async (req, res) => {
-  res.render('pages/about')
-})
+  res.render('pages/about');
+});
 
 app.get('/collection', (req, res) => {
-  res.render('pages/collection')
-})
+  res.render('pages/collection');
+});
 
 app.get('/detail/:uid', async (req, res) => {
-  res.render('pages/detail')
-})
+  res.render('pages/detail');
+});
 
 // Listen to application port
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
