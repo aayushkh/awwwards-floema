@@ -5,12 +5,12 @@ import path from 'path'
 import express from 'express'
 import { fileURLToPath } from 'url'
 
+const app = express()
+const port = process.env.PORT || 8005
+
 import * as Prismic from '@prismicio/client'
 import * as PrismicHelpers from '@prismicio/helpers'
 import * as UAParser from 'ua-parser-js'
-
-const app = express()
-const port = process.env.PORT || 8005
 
 const prismicEndpoint = process.env.PRISMIC_ENDPOINT
 const accessToken = process.env.PRISMIC_ACCESS_TOKEN
