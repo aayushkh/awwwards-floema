@@ -15,23 +15,27 @@ const UAParser = require('ua-parser-js');
 const prismicEndpoint = process.env.PRISMIC_ENDPOINT;
 const accessToken = process.env.PRISMIC_ACCESS_TOKEN;
 
+// Set pug as templating engine
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
 // The `routes` property is your route resolver. It defines how you will
 // structure URLs in your project. Update the types to match the Custom
 // Types in your project, and edit the paths to match the routing in your
 // project.
-const routes = [
-  {
-    type: 'page',
-    path: '/',
-  },
-];
+// const routes = [
+//   {
+//     type: 'page',
+//     path: '/',
+//   },
+// ];
 
 // Initialize the prismic.io api
 const initAPI = (req) => {
   return Prismic.createClient(prismicEndpoint, {
-    fetch,
     accessToken,
-    routes,
+    req,
+    fetch,
   });
 };
 
@@ -116,17 +120,6 @@ const handleRequest = async (api) => {
     products,
   };
 };
-
-
-// Set pug as templating engine
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
-
-app.get('/', async (req, res) => {
-  const document = await client.getSingle('home');
-  res.render('page', { document });
-});
-
 
 app.get('/', async (req, res) => {
   const api = await initApi(req);
