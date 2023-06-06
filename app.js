@@ -12,8 +12,8 @@ const Prismic = require('@prismicio/client');
 const PrismicHelpers = require('@prismicio/helpers');
 const UAParser = require('ua-parser-js');
 
-const prismicEndpoint = process.env.PRISMIC_ENDPOINT
-const accessToken = process.env.PRISMIC_ACCESS_TOKEN
+const prismicEndpoint = process.env.PRISMIC_ENDPOINT;
+const accessToken = process.env.PRISMIC_ACCESS_TOKEN;
 
 // The `routes` property is your route resolver. It defines how you will
 // structure URLs in your project. Update the types to match the Custom
@@ -24,40 +24,40 @@ const routes = [
     type: 'page',
     path: '/',
   },
-]
+];
 
 // Initialize the prismic.io api
 const initAPI = Prismic.createClient(prismicEndpoint, {
   fetch,
   accessToken,
   routes,
-})
+});
 
 // Prismic Link Resolver
 // https://prismic.io/docs/route-resolver#link-resolver
 const handleLinkResolver = doc => {
   // Default to homepage
-  return '/'
+  return '/';
 }
 
 // Add a middleware function that runs on every route. It will inject
 // the prismic context to the locals so that we can access these in
 // our templates
 app.use((_, res, next) => {
-  const ua = UAParser(req.headers['user-agent'])
+  const ua = UAParser(req.headers['user-agent']);
 
-  res.locals.isDesktop = ua.device.type === undefined
-  res.locals.isPhone = ua.device.type === 'mobile'
-  res.locals.isTablet = ua.device.type === 'tablet'
+  res.locals.isDesktop = ua.device.type === undefined;
+  res.locals.isPhone = ua.device.type === 'mobile';
+  res.locals.isTablet = ua.device.type === 'tablet';
 
   res.locals.ctx = {
     endpoint: prismicEndpoint,
     linkResolver: handleLinkResolver,
-  }
-  res.locals.PrismicHelpers = PrismicHelpers
+  };
+  res.locals.PrismicHelpers = PrismicHelpers;
 
-  next()
-})
+  next();
+});
 
 const handleRequest = async (api) => {
   const [about, home, meta, navigation, preloader, { results: collections }] = await Promise.all([
@@ -76,7 +76,7 @@ const handleRequest = async (api) => {
   collections.forEach(collection => {
     collection.data.products.forEach(({ products_product: { uid } }) => {
       products.push(find(productsData, { uid }))
-    })
+    });
   });
 
   const assets = [];
@@ -93,14 +93,14 @@ const handleRequest = async (api) => {
     if (section.slice_type === 'gallery') {
       section.items.forEach((item) => {
         assets.push(item.image.url)
-      })
+      });
     }
   });
 
   collections.forEach((collection) => {
     collection.data.products.forEach((item) => {
       assets.push(item.products_product.data.image.url)
-    })
+    });
   });
 
   return {
@@ -112,8 +112,8 @@ const handleRequest = async (api) => {
     navigation,
     preloader,
     products,
-  };
-};
+  }
+}
 
 
 // Set pug as templating engine
@@ -121,8 +121,8 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', async (req, res) => {
-  const document = await client.getSingle('home')
-  res.render('page', { document })
+  const document = await client.getSingle('home');
+  res.render('page', { document });
 });
 
 
