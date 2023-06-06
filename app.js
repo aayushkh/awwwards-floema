@@ -31,7 +31,7 @@ app.set('views', path.join(__dirname, 'views'));
 // ];
 
 // Initialize the prismic.io api
-const initAPI = (req) => {
+const initAPI = req => {
   return Prismic.createClient(prismicEndpoint, {
     accessToken,
     req,
@@ -42,6 +42,15 @@ const initAPI = (req) => {
 // Prismic Link Resolver
 // https://prismic.io/docs/route-resolver#link-resolver
 const handleLinkResolver = doc => {
+  // if (doc.type === 'product') {
+  //   return `/detail/${doc.uid}`
+  // }
+  // if (doc.type === 'collections') {
+  //   return '/collections'
+  // }
+  // if (doc.type === 'about') {
+  //   return '/about'
+  // }
   // Default to homepage
   return '/';
 };
@@ -72,7 +81,7 @@ const handleRequest = async (api) => {
     api.getSingle('meta'),
     api.getSingle('navigation'),
     api.getSingle('preloader'),
-    api.query(Prismic.Predicates.at('document.type', 'collection'), {
+    api.get(Prismic.predicate.at('document.type', 'collection'), {
       fetchLinks: 'product.image, product.model'
     }),
   ]);
@@ -122,17 +131,17 @@ const handleRequest = async (api) => {
 };
 
 app.get('/', async (req, res) => {
-  const api = await initApi(req);
-  const defaults = await handleRequest(api);
+  const api = await initAPI(req);
+  api.get(
+    Prismic.predicate.at('document.type', 'about')
+  ).then(response => {
+    console.log(response);
+    res.render('pages/about', { document: response.results[0] });
+  });
+  // const defaults = await handleRequest(api);
 
-  res.render('base', { ...defaults });
+  // res.render('base', { ...defaults });
 });
-
-// Query for the root path
-// app.get('/', async (req, res) => {
-//   const document = await client.getFirst()
-//   res.render('page', { document })
-// })
 
 app.get('/about', async (req, res) => {
   res.render('pages/about');
