@@ -4,4 +4,43 @@ block variables
   - var template = 'about'
 
 block content
-  h1.about__title About
+  .about
+    .about-wrapper
+    section.about-gallery
+      .about-gallery-wrapper
+        each media in about.data.gallery
+          figure.about-gallery-media
+            img.about-gallery-media-image(alt=media.image.alt src=media.image.url)
+
+    each section in about.data.body
+      if section.slice_type == 'title'
+        h2.about-title=section.primary.text
+
+      if section.slice_type == 'content'
+        section.about-content
+          .about-content-wrapper
+            p.about-content-label=section.primary.label
+
+            .about-content-description!=ctx.prismic.asHTML(section.primary.description)
+
+            figure.about-content-media
+              img.about-content-media-image(alt=section.primary.image.alt src=section.primary.image.url)
+
+      if section.slice_type == 'highlight'
+        section.about-highlight
+          .about-highlight-wrapper
+            if section.primary.label
+              p.about-highlight-label=section.primary.label
+
+            h3.about-highlight-title=section.primary.title
+
+            each media in section.items
+              figure.about-highlight-media
+                img.about-highlight-media-image(alt=media.image.alt src=media.image.url)
+
+      if section.slice_type == 'gallery'
+        section.about-gallery
+          .about-gallery-wrapper
+            each media in section.items
+              figure.about-gallery-media
+                img.about-gallery-media-image(alt=media.image.alt src=media.image.url)
