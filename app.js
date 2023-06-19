@@ -146,7 +146,10 @@ app.get('/collection', (req, res) => {
 });
 
 app.get('/detail/:uid', async (req, res) => {
-  res.render('pages/detail');
+  const api = await initAPI(req);
+  const product = await api.getByUID('product', req.params.uid);
+  console.log('product', req.params.uid, product);
+  res.render('pages/detail', { product });
 });
 
 // Listen to application port
