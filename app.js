@@ -4,9 +4,12 @@ require('dotenv').config();
 const fetch = require('node-fetch');
 const path = require('path');
 const express = require('express');
+const errorHandler = require('errorhandler');
 
 const app = express();
 const port = process.env.PORT || 8005;
+
+app.use(errorHandler());
 
 const prismic = require('@prismicio/client');
 // const prismicHelpers = require('@prismicio/helpers');
