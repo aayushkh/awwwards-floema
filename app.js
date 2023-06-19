@@ -8,8 +8,8 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 8005;
 
-const Prismic = require('@prismicio/client');
-const PrismicHelpers = require('@prismicio/helpers');
+const prismic = require('@prismicio/client');
+// const prismicHelpers = require('@prismicio/helpers');
 const UAParser = require('ua-parser-js');
 
 const prismicEndpoint = process.env.PRISMIC_ENDPOINT;
@@ -32,7 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Initialize the prismic.io api
 const initAPI = req => {
-  return Prismic.createClient(prismicEndpoint, {
+  return prismic.createClient(prismicEndpoint, {
     accessToken,
     req,
     fetch,
@@ -66,10 +66,11 @@ app.use((req, res, next) => {
   res.locals.isTablet = ua.device.type === 'tablet';
 
   res.locals.ctx = {
+    prismic,
     endpoint: prismicEndpoint,
     linkResolver: handleLinkResolver,
   };
-  res.locals.PrismicHelpers = PrismicHelpers;
+  // res.locals.PrismicHelpers = prismicHelpers;
 
   next();
 });
@@ -81,7 +82,7 @@ const handleRequest = async (api) => {
     api.getSingle('meta'),
     api.getSingle('navigation'),
     api.getSingle('preloader'),
-    api.get(Prismic.predicate.at('document.type', 'collection'), {
+    api.get(prismic.predicate.at('document.type', 'collection'), {
       fetchLinks: 'product.image, product.model'
     }),
   ]);
@@ -131,20 +132,13 @@ const handleRequest = async (api) => {
 };
 
 app.get('/', async (req, res) => {
-  const api = await initAPI(req);
-  api.get(
-    Prismic.predicate.at('document.type', 'about')
-  ).then(response => {
-    console.log(response);
-    res.render('pages/about', { document: response.results[0] });
-  });
-  // const defaults = await handleRequest(api);
-
-  // res.render('base', { ...defaults });
+  res.render('pages/home');
 });
 
 app.get('/about', async (req, res) => {
-  res.render('pages/about');
+  const api = await initAPI(req);
+  const about = await api.getSingle('about');
+  res.render('pages/about', { about });
 });
 
 app.get('/collection', (req, res) => {
