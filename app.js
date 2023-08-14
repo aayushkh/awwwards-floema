@@ -78,61 +78,15 @@ app.use((req, res, next) => {
   next();
 });
 
-const handleRequest = async (api) => {
-  const [about, home, meta, navigation, preloader, { results: collections }] = await Promise.all([
-    api.getSingle('about'),
-    api.getSingle('home'),
-    api.getSingle('meta'),
-    api.getSingle('navigation'),
-    api.getSingle('preloader'),
-    api.get(prismic.predicate.at('document.type', 'collection'), {
-      fetchLinks: 'product.image, product.model'
-    }),
-  ]);
-
-  const products = [];
-
-  collections.forEach(collection => {
-    collection.data.products.forEach(({ products_product: { uid } }) => {
-      products.push(find(productsData, { uid }))
-    });
-  });
-
-  const assets = [];
-
-  home.data.gallery.forEach((item) => {
-    assets.push(item.image.url)
-  });
-
-  about.data.gallery.forEach((item) => {
-    assets.push(item.image.url)
-  });
-
-  about.data.body.forEach((section) => {
-    if (section.slice_type === 'gallery') {
-      section.items.forEach((item) => {
-        assets.push(item.image.url)
-      });
-    }
-  });
-
-  collections.forEach((collection) => {
-    collection.data.products.forEach((item) => {
-      assets.push(item.products_product.data.image.url)
-    });
-  });
+const handleRequest = async api => {
+  // const navigation = await api.getSingle('navigation');
+  const preloader = await api.getSingle('preloader');
 
   return {
-    assets,
-    about,
-    collections,
-    home,
-    meta,
-    navigation,
+    // navigation,
     preloader,
-    products,
   };
-};
+}
 
 app.get('/', async (req, res) => {
   res.render('pages/home');
@@ -140,8 +94,12 @@ app.get('/', async (req, res) => {
 
 app.get('/about', async (req, res) => {
   const api = await initAPI(req);
+  const defaults = await handleRequest(api);
   const about = await api.getSingle('about');
-  res.render('pages/about', { about });
+  res.render('pages/about', {
+    ...defaults,
+    about,
+  });
 });
 
 app.get('/collection', (req, res) => {
@@ -150,9 +108,15 @@ app.get('/collection', (req, res) => {
 
 app.get('/detail/:uid', async (req, res) => {
   const api = await initAPI(req);
-  const product = await api.getByUID('product', req.params.uid);
+  const defaults = await handleRequest(api);
+  const product = await api.getByUID('product', req.params.uid, {
+    fetchLinks: 'collection.title',
+  });
   console.log('product', req.params.uid, product);
-  res.render('pages/detail', { product });
+  res.render('pages/detail', {
+    ...defaults,
+    product,
+  });
 });
 
 // Listen to application port
